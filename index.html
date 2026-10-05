@@ -191,10 +191,10 @@ function startNet(){
   if(peer&&!peer.destroyed)peer.destroy();
   isHost=true;peer=makePeer("afterhours-"+room);
   peer.on("connection",attach);
-  peer.on("disconnected",()=>setTimeout(()=>{if(peer&&!peer.destroyed)peer.reconnect()},2000));
+  peer.on("disconnected",()=>setTimeout(()=>{if(peer&&!peer.destroyed&&peer.disconnected)peer.reconnect()},2000));
   peer.on("error",e=>{
     if(e.type==="unavailable-id"){peer.destroy();isHost=false;peer=makePeer();peer.on("open",dial);
-      peer.on("disconnected",()=>setTimeout(()=>{if(peer&&!peer.destroyed)peer.reconnect()},2000));
+      peer.on("disconnected",()=>setTimeout(()=>{if(peer&&!peer.destroyed&&peer.disconnected)peer.reconnect()},2000));
       peer.on("error",x=>{if(x.type==="peer-unavailable")setTimeout(startNet,2500)})}
   });
 }
