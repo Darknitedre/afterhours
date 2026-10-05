@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>After Hours</title>
+<meta name="description" content="Question cards for two. Open the link and you both see the same card.">
+<meta property="og:title" content="After Hours">
+<meta property="og:description" content="Question cards for two. Open the link and we both see the same card.">
+<meta name="theme-color" content="#1b1230">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231b1230'/%3E%3Crect x='18' y='12' width='30' height='40' rx='6' fill='%23fbe9d7' transform='rotate(8 33 32)'/%3E%3Ccircle cx='34' cy='32' r='6' fill='%23ff8a5c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{color-scheme:dark;--night:#1b1230;--night-2:#271a44;--line:#43326a;--paper:#fbe9d7;--ink:#1d1330;--text:#f3ecff;--muted:#b3a4d4;--glow:#ff8a5c;
+--d0:#ffb347;--d1:#7cc6ff;--d2:#7fe0a8;--d3:#ff8fb1;--d4:#ff6b6b;--d5:#c9a0ff;
+--display:"Bricolage Grotesque","Arial Narrow",system-ui,sans-serif;--body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--night) radial-gradient(120% 60% at 50% 0%,#3a2463 0%,transparent 60%) no-repeat;color:var(--text);font:16px/1.45 var(--body)}
+button,input{font:inherit;color:inherit}button{cursor:pointer}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--glow);outline-offset:2px}
+.app{max-width:460px;height:100dvh;margin:0 auto;padding:calc(12px + env(safe-area-inset-top)) 16px calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font:800 1.35rem/1 var(--display);letter-spacing:-.02em;margin:0}.brand span{color:var(--glow)}
+.ghost{background:transparent;border:1.5px solid var(--line);border-radius:12px;padding:9px 13px;font-weight:600;white-space:nowrap}
+.primary{background:var(--glow);color:#2a1206;border:0;border-radius:16px;padding:15px;font:800 1.12rem var(--display)}
+button:disabled{opacity:.4;cursor:not-allowed}
+.presence{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted);min-height:1.4em}
+.dot{width:9px;height:9px;border-radius:50%;background:#6d5c94;flex:none}
+.presence.live .dot{background:#7fe0a8;box-shadow:0 0 0 4px #7fe0a833}
+.stage{flex:1;min-height:0;display:flex}
+.card{flex:1;background:var(--paper);color:var(--ink);border:0;border-radius:26px;padding:22px 22px 18px;display:flex;flex-direction:column;text-align:left;box-shadow:0 10px 0 -2px #0f0920,0 24px 50px -18px #000;overflow:hidden}
+.card.in{animation:deal .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes deal{from{transform:translateY(18px) rotate(-2.5deg);opacity:.2}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.card.in{animation:none}}
+.tag{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--paper);border-radius:999px;padding:6px 12px 6px 8px}
+.tag i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.q{font:800 clamp(1.5rem,7vw,2.25rem)/1.08 var(--display);letter-spacing:-.015em;margin:auto 0;text-wrap:balance;overflow-wrap:anywhere}
+.foot{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;font-size:.86rem;font-weight:600}
+.num{font:800 1.45rem/1 var(--display);font-variant-numeric:tabular-nums}
+.num small,.turn em{font:600 .72rem var(--body);opacity:.6;display:block;letter-spacing:.08em;text-transform:uppercase;font-style:normal}
+.turn{text-align:right;max-width:66%}
+.controls{display:grid;grid-template-columns:auto 1fr auto;gap:8px}
+.controls .ghost{padding:14px 16px}
+.fav[aria-pressed="true"]{border-color:var(--d3);color:var(--d3)}
+.sheet{position:fixed;inset:0;background:#0d0818d9;display:flex;align-items:flex-end;justify-content:center;z-index:5}
+.panel{width:100%;max-width:460px;max-height:88dvh;overflow-y:auto;background:var(--night-2);border:1.5px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;padding:20px 16px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px}
+.panel h2{font:800 1.5rem/1.1 var(--display);margin:0;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);font-size:.93rem}
+.label{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+input[type=text]{width:100%;background:var(--night);border:1.5px solid var(--line);border-radius:12px;padding:13px 12px;font-size:1.05rem}
+.decks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.deck{background:var(--night);border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;text-align:left;display:flex;gap:10px;align-items:center;font-weight:700;font-size:.93rem}
+.deck i{width:12px;height:12px;border-radius:50%;background:var(--c);opacity:.3;flex:none}
+.deck[aria-pressed="true"]{border-color:var(--c)}.deck[aria-pressed="true"] i{opacity:1}
+.linkbox{background:var(--night);border:1.5px dashed var(--line);border-radius:12px;padding:11px 12px;font-size:.86rem;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all;color:var(--text)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.saved{display:flex;flex-direction:column;gap:8px}
+.saved div{background:var(--night);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--paper);color:var(--ink);font-weight:700;border-radius:999px;padding:9px 16px;z-index:9;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <h1 class="brand">After <span>Hours</span></h1>
+    <div style="display:flex;gap:8px">
+      <button id="menuBtn" class="ghost" type="button">Decks</button>
+      <button id="inviteBtn" class="ghost" type="button">Invite</button>
+    </div>
+  </div>
+  <div id="presence" class="presence"><i class="dot"></i><span id="presenceText">Just you so far. Tap Invite to send the link.</span></div>
+  <div class="stage">
+    <button id="card" class="card" type="button" aria-label="Next card">
+      <span class="tag" id="tag"><i></i><span id="tagText"></span></span>
+      <span class="q" id="q" aria-live="polite"></span>
+      <span class="foot">
+        <span class="num"><small>Card</small><span id="num"></span></span>
+        <span class="turn" id="turn"></span>
+      </span>
+    </button>
+  </div>
+  <div class="controls">
+    <button id="back" class="ghost" type="button">Back</button>
+    <button id="next" class="primary" type="button">Next card</button>
+    <button id="fav" class="ghost fav" type="button" aria-pressed="false" aria-label="Save this question">♥</button>
+  </div>
+</div>
+
+<div id="nameSheet" class="sheet" hidden>
+  <form id="nameForm" class="panel">
+    <h2>What should we call you?</h2>
+    <p>Your name shows on the cards so you both know whose turn it is.</p>
+    <input id="nameInput" type="text" maxlength="14" placeholder="Your first name" autocomplete="given-name" required>
+    <button class="primary" type="submit">Start playing</button>
+  </form>
+</div>
+
+<div id="inviteSheet" class="sheet" hidden>
+  <div class="panel">
+    <h2>Send them this link</h2>
+    <p>They tap it, type their name, and you both see the same card. Either of you can flip to the next one. Keep this page open while they join.</p>
+    <div id="linkBox" class="linkbox"></div>
+    <div class="row">
+      <button id="copyBtn" class="ghost" type="button">Copy link</button>
+      <button id="shareBtn" class="primary" type="button">Share</button>
+    </div>
+    <button class="ghost" type="button" data-close>Close</button>
+  </div>
+</div>
+
+<div id="menuSheet" class="sheet" hidden>
+  <div class="panel">
+    <h2>Decks</h2>
+    <p>Changing decks reshuffles and starts from card 1 for both of you.</p>
+    <div id="decks" class="decks"></div>
+    <button id="applyDecks" class="primary" type="button">Reshuffle with these decks</button>
+    <p class="label">Saved on this phone</p>
+    <div id="saved" class="saved"></div>
+    <div class="row">
+      <button id="renameBtn" class="ghost" type="button">Change my name</button>
+      <button id="newGameBtn" class="ghost" type="button">Brand new game</button>
+    </div>
+    <button class="ghost" type="button" data-close>Close</button>
+  </div>
+</div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+const DECKS=[
+["Warm Up",["What's a small thing that instantly makes your day better?","What song do you know every single word to?","What's the best meal you've ever had, and where was it?","What were you like at 15?","What's something you're weirdly good at?","What's your perfect Sunday from wake-up to bedtime?","Which movie could you watch over and over?","What's the most spontaneous thing you've ever done?","What food could you never give up?","What's a compliment you still remember?","If you had a free plane ticket for tomorrow, where are you going?","What's a hobby you'd pick up if time and money didn't matter?","What's the funniest thing that happened to you this month?","Morning person or night person, and what does that look like?","What did you want to be when you grew up?","What's your go-to order when you can't decide what to eat?"]],
+["Deep End",["What's a lesson you had to learn the hard way?","Who shaped the person you are today, and how?","What does peace look like for you right now?","What's something you believed five years ago that you don't believe now?","When do you feel most like yourself?","What's a part of your life you're still figuring out?","What are you most proud of that nobody clapped for?","What do people usually get wrong about you?","What does a good life look like to you at 60?","What's something you forgave that wasn't easy to forgive?","What do you need on a rough day: space, company, or solutions?","What's a fear you've outgrown?","What's one thing you wish you'd been told sooner?","What are you grateful for that you used to take for granted?","What's a boundary you've learned to hold?","When was the last time you changed your mind about something important?"]],
+["Money & Drive",["What does being financially comfortable mean to you?","Are you more of a saver or a spender? Where did that come from?","What's the best money decision you've ever made?","What would you do for work if every job paid the same?","What's a goal you're working toward this year?","How do you feel about mixing money in a relationship?","What does success look like to you, beyond the paycheck?","What's a money mistake that taught you something?","Where do you want to be living in five years?","What's something you'd happily spend big on, and something you refuse to?","How did your family talk about money when you were growing up?","What's a skill you want to master before you're done?","Would you rather own a business or have a great job? Why?","What does retirement look like in your head?","What's one risk you're glad you took?","What would you do first with an unexpected $10,000?"]],
+["The Two of Us",["What makes you feel most appreciated by someone?","How do you like to be cared for when you're stressed?","What's your idea of a great date that costs almost nothing?","How do you handle it when you and someone you care about disagree?","What did you notice first about me?","What's a relationship you admire, and what makes it work?","What does trust look like to you day to day?","What's something small that someone does that means a lot to you?","How much alone time do you need, honestly?","What's a deal-breaker for you, and a deal-maker?","How do you like to celebrate good news?","What's something you want to do together that we haven't yet?","What does a good apology sound like to you?","What's the best advice about love you've ever heard?","What makes you feel safe with someone?","What's one thing you'd like me to know about you that I haven't asked?"]],
+["Flirt",["What's the most attractive quality a person can have?","What's your idea of the perfect first kiss setting?","What outfit of yours do you feel best in?","What's a small gesture that gets you every time?","What's the most romantic thing anyone has done for you?","What's your favorite thing about my voice or the way I talk?","What would our theme song be right now?","What were you thinking the first time we talked?","Describe your dream date night in three words.","What's something about me you're curious about but haven't asked?","What's your love language, and what's your guess for mine?","What's a compliment you've been holding back?","Slow dance in the kitchen or night out on the town?","What's the best way to win you over after a long day?","What nickname would you give me?","What's one thing I do that makes you smile?"]],
+["Play",["Would you rather take a road trip with no plan or a resort with every hour booked?","Would you rather cook together or get dressed up and go out?","Would you rather know how your life turns out or be surprised?","Would you rather give up music or give up movies for a year?","Would you rather have a beach house or a cabin in the mountains?","Would you rather always say what you think or never have to explain yourself?","Dare: in 30 seconds, name everything you remember about our first conversation.","Dare: describe the other person's laugh without using the word 'laugh'.","Dare: sing one line of the song stuck in your head. The other person guesses it.","Dare: give your best impression of the other person ordering food.","Guess: what's the other person's comfort food? They tell you if you're right.","Guess: what would the other person grab first if the house was on fire?","Two truths and a lie. The other person picks the lie.","Rapid fire, five seconds each: favorite color, season, city, snack, movie.","Finish the sentence: \"I knew I liked talking to you when...\"","Finish the sentence: \"One thing I want this year is...\""]]
+];
+const $=id=>document.getElementById(id);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const rand=n=>{const a="abcdefghjkmnpqrstuvwxyz23456789";let s="";for(const x of crypto.getRandomValues(new Uint8Array(n)))s+=a[x%a.length];return s};
+const newSeed=()=>crypto.getRandomValues(new Uint32Array(1))[0];
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function deal(mask,seed){const c=[];DECKS.forEach((d,di)=>{if(mask>>di&1)d[1].forEach((_,ci)=>c.push([di,ci]))});let a=seed>>>0;
+  const r=()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+  for(let i=c.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[c[i],c[j]]=[c[j],c[i]]}return c}
+
+/* Each game is a link: the part after # is the game code. No code yet means a fresh game. */
+let room=location.hash.slice(1).toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,16);
+if(!room){room=rand(8);history.replaceState(null,"","#"+room)}
+const link=location.origin+location.pathname+"#"+room;
+let pid=store.get("ah:pid",null);if(!pid){pid=rand(10);store.set("ah:pid",pid)}
+let myName=store.get("ah:name","");
+let favs=store.get("ah:favs",[]);
+
+/* Shared state. v counts changes so two phones can tell whose copy is newer. Both start from the
+   same seed (the game code), so the decks match even before the phones find each other. */
+function valid(s){return s&&Number.isInteger(s.v)&&Number.isInteger(s.mask)&&s.mask>=1&&s.mask<=63&&Number.isInteger(s.seed)&&s.seed>=0&&s.seed<=4294967295&&Number.isInteger(s.idx)&&s.idx>=0&&s.idx<=96&&s.names&&typeof s.names==="object"}
+let S=store.get("ah:game:"+room,null);
+if(!valid(S))S={v:0,mask:11,seed:hash(room),idx:0,names:{}};
+let order=deal(S.mask,S.seed),lastKey="",conn=null,peer=null,isHost=false,pickMask=0;
+
+function cleanNames(n){const o={};Object.keys(n).slice(0,2).forEach(k=>{if(typeof n[k]==="string")o[String(k).slice(0,12)]=n[k].slice(0,14)});return o}
+function commit(change){S={...S,...change,v:S.v+1};afterChange();send()}
+function afterChange(){order=deal(S.mask,S.seed);if(S.idx>order.length)S.idx=order.length;store.set("ah:game:"+room,S);render()}
+function send(){if(conn&&conn.open)conn.send({t:"state",s:S})}
+function receive(m){
+  if(!m||m.t!=="state"||!valid(m.s))return;
+  const theirs={...m.s,names:cleanNames(m.s.names)};
+  if(theirs.v>S.v||(theirs.v===S.v&&JSON.stringify(theirs)>JSON.stringify(S))){
+    const mine=S.names[pid];S=theirs;
+    if(mine&&S.names[pid]!==mine){S={...S,names:{...S.names,[pid]:mine},v:S.v+1};afterChange();send()}else afterChange();
+  }else if(theirs.v<S.v)send();
+}
+
+/* Phones connect straight to each other. The first phone on a link holds the game's address;
+   the second one finds the address taken and dials it. */
+const SIG=store.get("ah:sig",null);
+function makePeer(id){return SIG?new Peer(id,SIG):new Peer(id)}
+function attach(c){
+  c.on("open",()=>{if(conn&&conn!==c&&conn.open)conn.close();conn=c;send();render()});
+  c.on("data",receive);
+  c.on("close",()=>{if(conn===c){conn=null;render();if(!isHost)setTimeout(dial,1500)}});
+  c.on("error",()=>{});
+}
+function dial(){if(isHost||!peer||peer.destroyed||(conn&&conn.open))return;if(peer.disconnected){peer.reconnect();return}attach(peer.connect("afterhours-"+room,{reliable:true}))}
+function startNet(){
+  if(typeof Peer==="undefined")return;
+  if(peer&&!peer.destroyed)peer.destroy();
+  isHost=true;peer=makePeer("afterhours-"+room);
+  peer.on("connection",attach);
+  peer.on("disconnected",()=>setTimeout(()=>{if(peer&&!peer.destroyed)peer.reconnect()},2000));
+  peer.on("error",e=>{
+    if(e.type==="unavailable-id"){peer.destroy();isHost=false;peer=makePeer();peer.on("open",dial);
+      peer.on("disconnected",()=>setTimeout(()=>{if(peer&&!peer.destroyed)peer.reconnect()},2000));
+      peer.on("error",x=>{if(x.type==="peer-unavailable")setTimeout(startNet,2500)})}
+  });
+}
+setInterval(()=>{if(!isHost&&!(conn&&conn.open))dial()},5000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&!(conn&&conn.open)){if(!peer||peer.destroyed)startNet();else if(peer.disconnected)peer.reconnect();else dial()}});
+
+function people(){return Object.keys(S.names).sort().map(id=>({id,name:S.names[id]}))}
+function render(){
+  const live=!!(conn&&conn.open),ppl=people(),other=ppl.find(p=>p.id!==pid);
+  $("presence").className="presence"+(live?" live":"");
+  $("presenceText").textContent=live?`${other?other.name:"Your person"} is here. You're in sync.`:other?`${other.name} isn't connected right now. Card numbers still match.`:"Just you so far. Tap Invite to send the link.";
+  const card=S.idx<order.length?order[S.idx]:null;
+  $("tag").hidden=!card;$("fav").hidden=!card;$("back").disabled=S.idx===0;
+  if(!card){$("q").textContent="That's the whole deck. Good talk.";$("num").textContent="✓";$("turn").textContent="";$("next").textContent="Shuffle again"}
+  else{
+    const text=DECKS[card[0]][1][card[1]];
+    $("tag").style.setProperty("--c",`var(--d${card[0]})`);$("tagText").textContent=DECKS[card[0]][0];
+    $("q").textContent=text;$("num").textContent=`${S.idx+1} / ${order.length}`;$("next").textContent="Next card";
+    $("fav").setAttribute("aria-pressed",String(favs.includes(text)));
+    const t=$("turn");t.textContent="";
+    if(ppl.length>=2){const a=ppl[S.idx%2],b=ppl[(S.idx+1)%2],em=document.createElement("em");em.textContent="This round";t.append(em,`${a.name} reads it. ${b.name} answers first.`)}
+  }
+  const key=S.seed+":"+S.mask+":"+S.idx;
+  if(key!==lastKey){const c=$("card");c.classList.remove("in");void c.offsetWidth;c.classList.add("in");lastKey=key}
+}
+function currentText(){const c=order[S.idx];return c?DECKS[c[0]][1][c[1]]:null}
+function next(){if(S.idx<order.length)commit({idx:S.idx+1});else commit({seed:newSeed(),idx:0})}
+$("next").onclick=next;$("card").onclick=next;
+$("back").onclick=()=>{if(S.idx>0)commit({idx:S.idx-1})};
+$("fav").onclick=()=>{const t=currentText();if(!t)return;favs=favs.includes(t)?favs.filter(x=>x!==t):[...favs,t];store.set("ah:favs",favs);render()};
+
+let toastTimer;function toast(x){const t=$("toast");t.textContent=x;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,2200)}
+const openS=id=>$(id).hidden=false,closeS=id=>$(id).hidden=true;
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".sheet").hidden=true);
+function openName(){$("nameInput").value=myName;openS("nameSheet")}
+$("nameForm").addEventListener("submit",e=>{e.preventDefault();const n=$("nameInput").value.trim().slice(0,14);if(!n)return;myName=n;store.set("ah:name",n);commit({names:{...S.names,[pid]:n}});closeS("nameSheet")});
+$("inviteBtn").onclick=()=>{$("linkBox").textContent=link;$("shareBtn").hidden=!navigator.share;openS("inviteSheet")};
+$("copyBtn").onclick=async()=>{try{await navigator.clipboard.writeText(link);toast("Link copied")}catch(e){toast("Press and hold the link to copy it")}};
+$("shareBtn").onclick=async()=>{try{await navigator.share({title:"After Hours",text:"Play a card game with me. Open this and we'll see the same cards.",url:link})}catch(e){}};
+function drawDecks(){const box=$("decks");box.textContent="";DECKS.forEach((d,i)=>{const b=document.createElement("button");b.type="button";b.className="deck";b.style.setProperty("--c",`var(--d${i})`);b.setAttribute("aria-pressed",String(!!(pickMask>>i&1)));b.append(document.createElement("i"),d[0]);b.onclick=()=>{pickMask^=1<<i;drawDecks()};box.append(b)});$("applyDecks").disabled=pickMask===0}
+$("menuBtn").onclick=()=>{pickMask=S.mask;drawDecks();const s=$("saved");s.textContent="";(favs.length?favs:["Nothing saved yet. Tap the heart on a card to keep it."]).forEach(t=>{const d=document.createElement("div");d.textContent=t;s.append(d)});openS("menuSheet")};
+$("applyDecks").onclick=()=>{commit({mask:pickMask,seed:newSeed(),idx:0});closeS("menuSheet")};
+$("renameBtn").onclick=()=>{closeS("menuSheet");openName()};
+$("newGameBtn").onclick=()=>{location.href=location.origin+location.pathname;};
+window.addEventListener("hashchange",()=>location.reload());
+
+render();
+if(myName){if(S.names[pid]!==myName)commit({names:{...S.names,[pid]:myName}})}else openName();
+startNet();
+</script>
+</body>
+</html>
